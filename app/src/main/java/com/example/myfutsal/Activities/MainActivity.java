@@ -1,5 +1,6 @@
 package com.example.myfutsal.Activities;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -9,12 +10,16 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.myfutsal.HomeFragment;
 import com.example.myfutsal.Menus.CariLawanActivity;
 import com.example.myfutsal.Menus.InfoAppActivity;
@@ -27,7 +32,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Nullable;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,14 +52,10 @@ public class MainActivity extends AppCompatActivity {
     private CardView cvCari, cvSiap, cvPosts, cvTimKu, cvInfoApp, cvExit;
     private String current_user_id;
 
-    private FloatingActionButton addPostBtn;
+    private TextView namaTeam, siapMain, txtUmur;
+    private CircleImageView logoTeam;
 
-    private BottomNavigationView mainbottomNav;
-
-    private HomeFragment homeFragment;
-    private ProfileFragment profileFragment;
-    private UsersFragment usersFragment;
-
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -60,10 +70,20 @@ public class MainActivity extends AppCompatActivity {
         cvInfoApp = findViewById(R.id.cv_infoapp);
         cvExit = findViewById(R.id.cv_keluar);
 
+        namaTeam = findViewById(R.id.nama_tim);
+        siapMain = findViewById(R.id.txt_siapmain);
+        logoTeam = findViewById(R.id.logo_tim);
+        txtUmur = findViewById(R.id.txt_umur);
+
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
+
+
+
         if (mAuth.getCurrentUser() != null) {
+
+            current_user_id = mAuth.getCurrentUser().getUid();
 
             //PILIH MENU
 
@@ -78,6 +98,36 @@ public class MainActivity extends AppCompatActivity {
             cvSiap.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    firebaseFirestore.collection("Tim").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                            if (task.isSuccessful()) {
+
+                                String siap = task.getResult().getString("siap_main");
+
+                                if (siap.equals("Siap Main")){
+
+                                    firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Belum Siap Main").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(MainActivity.this, "Belum Siap Main", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else if (siap.equals("Belum Siap Main")){
+
+                                    firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Siap Main").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            Toast.makeText(MainActivity.this, "Siap Main", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+
+                            }
+                        }
+                    });
 
                 }
             });
@@ -126,34 +176,77 @@ public class MainActivity extends AppCompatActivity {
 
             sendToLogin();
 
-        }else{
+        } else {
 
-            current_user_id = mAuth.getCurrentUser().getUid();
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Loading..");
+            progressDialog.show();
 
-            firebaseFirestore.collection("User").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            firebaseFirestore.collection("Tim").document(current_user_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                 @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
-                    if (task.isSuccessful()) {
-
-                        if (!task.getResult().exists()) {
-
-
-                            Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
-                            startActivity(setupIntent);
-                            finish();
-
-                        }
-                    }else{
-
-                    String errorMessage = task.getException().getMessage();
-                        Toast.makeText(MainActivity.this, "Error : " + errorMessage,Toast.LENGTH_LONG).show();
+                    if (e != null) {
+                        Log.w("MainAc", "Listen failed.", e);
+                        return;
                     }
+
+                    if (!documentSnapshot.exists()){
+
+                        Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
+                        startActivity(setupIntent);
+                        finish();
+
+                    } else if (documentSnapshot != null && documentSnapshot.exists()) {
+                        String nama_tim = documentSnapshot.getString("nama_tim");
+                        String siap_main = documentSnapshot.getString("siap_main");
+                        String foto_tim = documentSnapshot.getString("foto_tim");
+                        String logo = documentSnapshot.getString("logo");
+                        String umur = documentSnapshot.getString("umur");
+
+                        namaTeam.setText(nama_tim);
+                        siapMain.setText(siap_main);
+                        txtUmur.setText(umur);
+
+                        RequestOptions placeholderRequest = new RequestOptions();
+                        placeholderRequest.placeholder(R.drawable.default_image);
+
+//                        Glide.with(MainActivity.this).applyDefaultRequestOptions(placeholderRequest).load(foto_tim).into(fotoTim);
+                        Glide.with(MainActivity.this).applyDefaultRequestOptions(placeholderRequest).load(logo).into(logoTeam);
+
+                        progressDialog.dismiss();
+                    }
+                    else {
+                        Log.d("MainAc", "Current data: null");
+                    }
+
                 }
             });
+//            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                @Override
+//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//
+//                    if (task.isSuccessful()) {
+//
+//
+//
+//
+//                        if (!task.getResult().exists()) {
+//
+//
+//                            Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
+//                            startActivity(setupIntent);
+//                            finish();
+//
+//                        }
+//                    } else {
+//
+//                        String errorMessage = task.getException().getMessage();
+//                        Toast.makeText(MainActivity.this, "Error : " + errorMessage, Toast.LENGTH_LONG).show();
+//                    }
+//                }
         }
     }
-
 
 
     @Override

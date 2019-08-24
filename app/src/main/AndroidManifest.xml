@@ -12,13 +12,17 @@
         android:roundIcon="@drawable/info"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.TambahPemainActivity"
-            android:parentActivityName=".Menus.MyTeamActivity"></activity>
-        <activity android:name=".Activities.EditTimActivity"
-            android:parentActivityName=".Menus.MyTeamActivity"/>
+        <activity android:name=".Activities.EditPemainActivity"></activity>
+        <activity
+            android:name=".Activities.TambahPemainActivity"
+            android:parentActivityName=".Menus.MyTeamActivity" />
+        <activity
+            android:name=".Activities.EditTimActivity"
+            android:parentActivityName=".Menus.MyTeamActivity" />
         <activity android:name=".Menus.InfoAppActivity" />
-        <activity android:name=".Menus.MyTeamActivity"
-            android:parentActivityName=".Activities.MainActivity"/>
+        <activity
+            android:name=".Menus.MyTeamActivity"
+            android:parentActivityName=".Activities.MainActivity" />
         <activity android:name=".Menus.PostsActivity" />
         <activity android:name=".Menus.CariLawanActivity" />
         <activity

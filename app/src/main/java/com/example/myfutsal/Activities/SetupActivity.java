@@ -7,9 +7,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -19,6 +22,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 
@@ -38,6 +43,9 @@ import com.google.firebase.storage.UploadTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,19 +55,23 @@ public class SetupActivity extends AppCompatActivity {
 
     private CircleImageView setupLogotim;
     private ImageView setupFotoTim;
-    private Uri mainImageURI = null;
+    private Uri mainFotoURI = null;
+    private Uri mainLogoURI = null;
     private Toolbar setupToolbar;
     private String user_id;
-
+    Uri pictureUri = null;
 
     private EditText setupNamaTim;
     private Button setupSimpan;
+    private RadioGroup radioGroup;
+    private RadioButton radioButton;
     private ProgressDialog progressDialog;
 
     private StorageReference storageReferance;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
-
+    static int CAMERA_REQUEST_CODE = 228;
+    static int CAMERA_REQUEST_CODE1 = 229;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +89,7 @@ public class SetupActivity extends AppCompatActivity {
         setupFotoTim = findViewById(R.id.setup_foto_tim);
         setupLogotim = findViewById(R.id.setup_logotim);
         setupNamaTim = findViewById(R.id.setup_namatim);
+        radioGroup = findViewById(R.id.radiogroup);
         setupSimpan = findViewById(R.id.setup_simpan);
 
         setupToolbar = findViewById(R.id.setuptoolbar);
@@ -89,29 +102,32 @@ public class SetupActivity extends AppCompatActivity {
         progressDialog.show();
         setupSimpan.setEnabled(false);
 
-        firebaseFirestore.collection("User").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Tim").document(user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
 
-                    if (task.getResult().exists()){
+                    if (task.getResult().exists()) {
 
-                      String name = task.getResult().getString("name");
-                      String image = task.getResult().getString("image");
+                        String nama_tim = task.getResult().getString("nama_tim");
+                        String foto_tim = task.getResult().getString("foto_tim");
+                        String logo = task.getResult().getString("logo");
 
-                      mainImageURI = Uri.parse(image);
+                        mainFotoURI = Uri.parse(foto_tim);
+                        mainLogoURI = Uri.parse(logo);
 
-                      setupNamaTim.setText(name);
+                        setupNamaTim.setText(nama_tim);
 
-                      RequestOptions placeholderRequest = new RequestOptions();
-                      placeholderRequest.placeholder(R.drawable.default_image);
+                        RequestOptions placeholderRequest = new RequestOptions();
+                        placeholderRequest.placeholder(R.drawable.default_image);
 
-                      Glide.with(SetupActivity.this).applyDefaultRequestOptions(placeholderRequest).load(image).into(setupFotoTim);
+                        Glide.with(SetupActivity.this).applyDefaultRequestOptions(placeholderRequest).load(foto_tim).into(setupFotoTim);
+                        Glide.with(SetupActivity.this).applyDefaultRequestOptions(placeholderRequest).load(logo).into(setupLogotim);
 
                     }
 
-                }else{
+                } else {
 
                     String error = task.getException().getMessage();
                     Toast.makeText(SetupActivity.this, "(FIRESTORE Retrieve Error) : " + error, Toast.LENGTH_LONG).show();
@@ -130,65 +146,101 @@ public class SetupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                final String user_name = setupNamaTim.getText().toString();
+                final String nama_tim = setupNamaTim.getText().toString();
 
-                if (!TextUtils.isEmpty(user_name) && mainImageURI != null) {
+                if (!TextUtils.isEmpty(nama_tim) && mainFotoURI != null && mainLogoURI != null) {
 
-                     user_id = firebaseAuth.getCurrentUser().getUid();
-                     progressDialog.show();
+                    user_id = firebaseAuth.getCurrentUser().getUid();
+                    progressDialog.show();
 
-                    final StorageReference image_path = storageReferance.child("Profile_image").child(user_id + ".jpg");
-                    image_path.putFile(mainImageURI).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                    final StorageReference foto_path = storageReferance.child("Foto_Tim").child(user_id + ".jpg");
+                    foto_path.putFile(mainFotoURI).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                         @Override
                         public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                            return image_path.getDownloadUrl();
+                            return foto_path.getDownloadUrl();
                         }
                     }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
+                        public void onComplete(@NonNull final Task<Uri> task1) {
 
-                            if (task.isSuccessful()) {
+                            if (task1.isSuccessful()) {
 
-                                Uri download_uri = task.getResult();
+                                final StorageReference logo_path = storageReferance.child("Logo_Tim").child(user_id + ".jpg");
 
-                                Map<String, String> userMap = new HashMap<>();
-                                userMap.put("name",  user_name);
-                                userMap.put("image", download_uri.toString());
-
-                                firebaseFirestore.collection("User").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                logo_path.putFile(mainLogoURI).continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                     @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
+                                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                        return logo_path.getDownloadUrl();
+                                    }
+                                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Uri> task2) {
 
-                                        if(task.isSuccessful()){
+                                        if (task2.isSuccessful()) {
 
-                                            Toast.makeText(SetupActivity.this, "The user Setting are updated. " , Toast.LENGTH_LONG).show();
-                                            Intent mainIntent = new Intent(SetupActivity.this, MyTeamActivity.class);
-                                            startActivity(mainIntent);
-                                            finish();
+                                            Uri download_urifoto = task1.getResult();
+                                            Uri download_urilogo = task2.getResult();
 
-                                        }else {
+                                            // get selected radio button from radioGroup
+                                            int selectedId = radioGroup.getCheckedRadioButtonId();
 
-                                            String error = task.getException().getMessage();
-                                            Toast.makeText(SetupActivity.this, "(FIRESTORE Error) : " + error, Toast.LENGTH_LONG).show();
+                                            // find the radiobutton by returned id
+                                            radioButton = (RadioButton) findViewById(selectedId);
+
+                                            Map<String, String> userMap = new HashMap<>();
+                                            userMap.put("nama_tim", nama_tim);
+                                            userMap.put("foto_tim", download_urifoto.toString());
+                                            userMap.put("logo", download_urilogo.toString());
+                                            userMap.put("umur", radioButton.getText().toString());
+                                            userMap.put("siap_main", "Belum Siap Main");
+
+
+                                            firebaseFirestore.collection("Tim").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+
+                                                    if (task.isSuccessful()) {
+
+                                                        Toast.makeText(SetupActivity.this, "Setting are updated. ", Toast.LENGTH_LONG).show();
+                                                        Intent mainIntent = new Intent(SetupActivity.this, MyTeamActivity.class);
+                                                        startActivity(mainIntent);
+                                                        finish();
+                                                        progressDialog.dismiss();
+
+                                                    } else {
+
+                                                        String error = task.getException().getMessage();
+                                                        Toast.makeText(SetupActivity.this, "(DB Error) : " + error, Toast.LENGTH_LONG).show();
+
+                                                    }
+
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+
+                                        } else {
+
+                                            String error = task2.getException().getMessage();
+                                            Toast.makeText(SetupActivity.this, "(Logo Tim Error) : " + error, Toast.LENGTH_LONG).show();
+
+                                            progressDialog.dismiss();
 
                                         }
-
-                                        progressDialog.dismiss();
                                     }
                                 });
-                                Toast.makeText(SetupActivity.this, "Image Uploaded", Toast.LENGTH_LONG).show();
+
+                                Toast.makeText(SetupActivity.this, "Tersimpan", Toast.LENGTH_LONG).show();
 
                             } else {
 
-                                String error = task.getException().getMessage();
-                                Toast.makeText(SetupActivity.this, "(IMAGE Error) : " + error, Toast.LENGTH_LONG).show();
+                                String error = task1.getException().getMessage();
+                                Toast.makeText(SetupActivity.this, "(Foto Tim Error) : " + error, Toast.LENGTH_LONG).show();
 
                                 progressDialog.dismiss();
                             }
 
                         }
                     });
-
 
 
                 }
@@ -199,49 +251,95 @@ public class SetupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                    if (ContextCompat.checkSelfPermission(SetupActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-                        Toast.makeText(SetupActivity.this, "permission Denied", Toast.LENGTH_LONG).show();
-                        ActivityCompat.requestPermissions(SetupActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-                    } else {
-
-
-                        BringImagePicker();
-                    }
-                } else {
-
-                    BringImagePicker();
+                    invokeCamera();
                 }
 
             }
         });
+
+        setupLogotim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    invokeCamera1();
+                }
+
+            }
+        });
+
     }
 
-    private void BringImagePicker() {
+    public void invokeCamera() {
 
-        CropImage.activity()
-                .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(1,1)
-                .start(SetupActivity.this);
+        // get a file reference
+//        mainFotoURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName(), createImageFile()); // Make Uri file example file://storage/emulated/0/Pictures/Civil_ID20180924_180619.jpg
+
+
+        Uri picUri = pictureUri;
+        startCropImageActivity(picUri, RC_CROP);
     }
+
+    public void invokeCamera1() {
+
+        // get a file reference
+//        mainLogoURI = FileProvider.getUriForFile(this, getApplicationContext().getPackageName(), createImageFile()); // Make Uri file example file://storage/emulated/0/Pictures/Civil_ID20180924_180619.jpg
+
+
+        Uri picUri = pictureUri;
+        startCropImageActivity(picUri, RC_CROP1);
+    }
+
+    private static final int RC_CROP = 100;
+    private static final int RC_CROP1 = 200;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK)  // resultCode: -1
+        {
+            if (requestCode == CAMERA_REQUEST_CODE) // requestCode: 288
+            {
 
-                mainImageURI = result.getUri();
-
-                setupFotoTim.setImageURI(mainImageURI);
-
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
+                Toast.makeText(SetupActivity.this, "Image 1 save",
+                        Toast.LENGTH_SHORT).show();
             }
+            if (requestCode == CAMERA_REQUEST_CODE1) {
+
+                Toast.makeText(SetupActivity.this, "Image 2 save",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            if (requestCode == RC_CROP) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                //put image on first ImageView
+                mainFotoURI = result.getUri();
+                setupFotoTim.setImageURI(mainFotoURI);
+            }
+
+            if (requestCode == RC_CROP1) {
+                CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                //put image on second ImageView
+                mainLogoURI = result.getUri();
+                setupLogotim.setImageURI(mainLogoURI);
+            }
+
+        } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+            // if there is any error show it
+//            Exception error = result.getError();
+            Toast.makeText(this, "+ error", Toast.LENGTH_LONG).show();
         }
+    }
+
+
+    private void startCropImageActivity(Uri imageUri, int requestCode) {
+        Intent vCropIntent = CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setMultiTouchEnabled(true)
+                .getIntent(this);
+
+        startActivityForResult(vCropIntent, requestCode);
     }
 }
 

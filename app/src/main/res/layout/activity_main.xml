@@ -35,10 +35,20 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nama_tim"
                 android:text="siap main gan"
-                android:textColor="@android:color/white" />
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"/>
 
-            <ImageView
-                android:id="@+id/foto_tim"
+            <TextView
+                android:id="@+id/txt_umur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_siapmain"
+                android:text="umur"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="10dp"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/logo_tim"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_alignParentRight="true"

@@ -14,8 +14,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-    </android.support.v7.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.Toolbar>
 
 
     <ScrollView
@@ -68,7 +67,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp">
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="20dp">
 
                     <EditText
                         android:id="@+id/setup_namatim"
@@ -81,15 +81,46 @@
                         android:singleLine="true" />
                 </android.support.design.widget.TextInputLayout>
 
+                <RadioGroup
+                    android:id="@+id/radiogroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/setup_namatimwdgrt"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/anakanak"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Anak Anak" />
+
+                    <RadioButton
+                        android:id="@+id/remaja"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Remaja" />
+
+                    <RadioButton
+                        android:id="@+id/dewasa"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dewasa" />
+
+                </RadioGroup>
+
                 <Button
                     android:id="@+id/setup_simpan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/setup_namatimwdgrt"
+                    android:layout_below="@+id/radiogroup"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="120dp"
                     android:background="@drawable/button_rounded"
-                    android:text="Simpan" />
+                    android:text="Simpan"
+                    android:textColor="@android:color/white"/>
 
             </RelativeLayout>
 

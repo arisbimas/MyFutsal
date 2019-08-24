@@ -87,28 +87,50 @@
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
-                <!--<TextView-->
-                <!--android:id="@+id/location"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/designation"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:text="Surat"-->
-                <!--android:textColor="#fff"-->
-                <!--android:textSize="16sp" />-->
+                <TextView
+                    android:id="@+id/txt_umur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/nama_tim"
+                    android:layout_marginTop="10dp"
+                    android:text="umur"
+                    android:textColor="#fff"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <!--<TextView-->
-                <!--android:id="@+id/designation"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_below="@+id/name"-->
-                <!--android:layout_centerHorizontal="true"-->
-                <!--android:layout_marginTop="10dp"-->
-                <!--android:text="(Adhyaksh)"-->
-                <!--android:textColor="#fff"-->
-                <!--android:textSize="18sp" />-->
+                <TextView
+                    android:id="@+id/txt_siapmain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/txt_umur"
+                    android:layout_marginTop="10dp"
+                    android:text="siap"
+                    android:textColor="#fff"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/profile_layout"
+                android:orientation="vertical"
+                android:layout_marginBottom="100dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Member :"
+                    android:padding="5sp"/>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_pemain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+            </LinearLayout>
 
         </RelativeLayout>
     </ScrollView>
