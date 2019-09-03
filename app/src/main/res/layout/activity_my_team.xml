@@ -91,8 +91,8 @@
                     android:id="@+id/txt_umur"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@+id/nama_tim"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="umur"
                     android:textColor="#fff"
@@ -103,8 +103,8 @@
                     android:id="@+id/txt_siapmain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@+id/txt_umur"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="siap"
                     android:textColor="#fff"
@@ -112,25 +112,40 @@
                     android:textStyle="bold" />
 
             </RelativeLayout>
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/profile_layout"
-                android:orientation="vertical"
-                android:layout_marginBottom="100dp">
+                android:layout_marginBottom="100dp"
+                android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/member"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Member :"
-                    android:padding="5sp"/>
+                    android:padding="5sp"
+                    android:text="Member :" />
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_pemain"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/member"></android.support.v7.widget.RecyclerView>
 
-                </android.support.v7.widget.RecyclerView>
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/tdk_ada_member"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/member"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="20dp"
+                    android:text="Belum Ada Pemain"
+                    android:textColor="@color/colorAccent"
+                    android:textSize="30dp"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
         </RelativeLayout>
     </ScrollView>

@@ -164,7 +164,7 @@ public class TambahPemainActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Uri> task) {
                                         if (task.isSuccessful()) {
 
-                                            simpanDataPemain(task, current_tim_id, nama, cekumurtim);
+                                            simpanDataPemain(task, current_tim_id, nama, cekumurtim, umurint);
 
                                         } else {
 
@@ -194,7 +194,7 @@ public class TambahPemainActivity extends AppCompatActivity {
 
     }
 
-    private void simpanDataPemain(@NonNull Task<Uri> task, String timid,  String username, String umur_pemain) {
+    private void simpanDataPemain(@NonNull Task<Uri> task, String timid,  String username, String umur_pemain, Integer umurint) {
 
 
         Uri downloadUri;
@@ -218,6 +218,7 @@ public class TambahPemainActivity extends AppCompatActivity {
         pemainMap.put("umur_pemain" , umur_pemain);
         pemainMap.put("foto_pemain", downloadUri.toString());
         pemainMap.put("team_id", timid);
+        pemainMap.put("umur_angka", umurint.toString());
 
         firebaseFirestore.collection("Pemain").document(randomIdPemain).set(pemainMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

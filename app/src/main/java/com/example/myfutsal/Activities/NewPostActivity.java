@@ -49,7 +49,6 @@ public class NewPostActivity extends AppCompatActivity {
     private String current_user_id;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +76,7 @@ public class NewPostActivity extends AppCompatActivity {
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
                         //.setMinCropResultSize(512,512)
-                        .setAspectRatio(1,1)
+                        .setAspectRatio(1, 1)
                         .start(NewPostActivity.this);
 
             }
@@ -90,7 +89,7 @@ public class NewPostActivity extends AppCompatActivity {
 
                 final String desc = newPostDesc.getText().toString();
 
-                if (!TextUtils.isEmpty(desc)  && postImageUri !=null){
+                if (!TextUtils.isEmpty(desc) && postImageUri != null) {
 
                     newPostProgress.setVisibility(View.VISIBLE);
 
@@ -109,24 +108,24 @@ public class NewPostActivity extends AppCompatActivity {
 
                                 Uri download_uri = task.getResult();
 
-                                Map<String, Object>postMap = new HashMap<>();
-                                postMap.put("image_url",download_uri.toString());
-                                postMap.put("desc",desc);
+                                Map<String, Object> postMap = new HashMap<>();
+                                postMap.put("image_url", download_uri.toString());
+                                postMap.put("desc", desc);
                                 postMap.put("user_id", current_user_id);
                                 postMap.put("timestamp", FieldValue.serverTimestamp());
 
-                                firebaseFirestore.collection( "posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                firebaseFirestore.collection("posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentReference> task) {
 
-                                        if(task.isSuccessful()){
+                                        if (task.isSuccessful()) {
 
-                                            Toast.makeText(NewPostActivity.this, "post was added",Toast.LENGTH_LONG).show();
+                                            Toast.makeText(NewPostActivity.this, "post was added", Toast.LENGTH_LONG).show();
                                             Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
                                             startActivity(mainIntent);
                                             finish();
 
-                                        }else {
+                                        } else {
 
 
                                         }
@@ -146,7 +145,6 @@ public class NewPostActivity extends AppCompatActivity {
                     });
 
 
-
                 }
 
             }
@@ -161,11 +159,10 @@ public class NewPostActivity extends AppCompatActivity {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
             if (resultCode == RESULT_OK) {
 
-            postImageUri = result.getUri();
+                postImageUri = result.getUri();
 
 
-            newPostImage.setImageURI(postImageUri);
-
+                newPostImage.setImageURI(postImageUri);
 
 
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {

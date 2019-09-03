@@ -6,4 +6,100 @@
     android:layout_height="match_parent"
     tools:context=".Activities.EditPemainActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/editpemaintoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.Toolbar>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editpemaintoolbar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="30dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/foto_pemain"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/profile_placeholder" />
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/wg_nama"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/foto_pemain"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/nama_pemain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5sp"
+                    android:drawableTint="#FF4081"
+                    android:hint="Nama Pemain"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/wg_umur"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wg_nama"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/umur_pemain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5sp"
+                    android:drawableTint="#FF4081"
+                    android:hint="Umur Pemain"
+                    android:inputType="number"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
+            <EditText
+                android:id="@+id/umur_pemaingrade"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5sp"
+                android:drawableTint="#FF4081"
+                android:hint="Umur Pemain Grade"
+                android:inputType="number"
+                android:singleLine="true"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/btn_editpemain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wg_umur"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="120dp"
+                android:background="@drawable/button_rounded"
+                android:text="Simpan"
+                android:textColor="@android:color/white"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
 </android.support.constraint.ConstraintLayout>

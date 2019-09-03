@@ -55,7 +55,7 @@ public class MyTeamActivity extends AppCompatActivity {
 
     private ImageView fotoTim, popUpTeam;
     private CircleImageView logoTim, fotoPemain;
-    private TextView namaTim, txtSiap, txtUmur;
+    private TextView namaTim, txtSiap, txtUmur, tidakAdaMemberTxt;
 
     private StorageReference storageReference;
     private FirebaseFirestore firebaseFirestore;
@@ -89,6 +89,7 @@ public class MyTeamActivity extends AppCompatActivity {
         namaTim = findViewById(R.id.nama_tim);
         txtSiap = findViewById(R.id.txt_siapmain);
         txtUmur = findViewById(R.id.txt_umur);
+        tidakAdaMemberTxt = findViewById(R.id.tdk_ada_member);
         popUpTeam = findViewById(R.id.popup_myteam);
 
         progressDialog = new ProgressDialog(this);
@@ -170,9 +171,8 @@ public class MyTeamActivity extends AppCompatActivity {
                     }
 
                 } else {
-//                    pemainRecyclerView.setVisibility(View.GONE);
-//                    emptyTxt.setVisibility(View.VISIBLE);
-//                    emptyImg.setVisibility(View.VISIBLE);
+                    pemainRecyclerView.setVisibility(View.GONE);
+                    tidakAdaMemberTxt.setVisibility(View.VISIBLE);
                 }
 
             }

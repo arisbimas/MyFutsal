@@ -193,6 +193,7 @@ public class SetupActivity extends AppCompatActivity {
                                             userMap.put("logo", download_urilogo.toString());
                                             userMap.put("umur", radioButton.getText().toString());
                                             userMap.put("siap_main", "Belum Siap Main");
+                                            userMap.put("tim_id", user_id);
 
 
                                             firebaseFirestore.collection("Tim").document(user_id).set(userMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -336,6 +337,7 @@ public class SetupActivity extends AppCompatActivity {
     private void startCropImageActivity(Uri imageUri, int requestCode) {
         Intent vCropIntent = CropImage.activity(imageUri)
                 .setGuidelines(CropImageView.Guidelines.ON)
+                .setAspectRatio(16,9)
                 .setMultiTouchEnabled(true)
                 .getIntent(this);
 

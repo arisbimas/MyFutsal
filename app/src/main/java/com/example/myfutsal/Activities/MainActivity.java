@@ -212,7 +212,11 @@ public class MainActivity extends AppCompatActivity {
                         placeholderRequest.placeholder(R.drawable.default_image);
 
 //                        Glide.with(MainActivity.this).applyDefaultRequestOptions(placeholderRequest).load(foto_tim).into(fotoTim);
-                        Glide.with(MainActivity.this).applyDefaultRequestOptions(placeholderRequest).load(logo).into(logoTeam);
+                        try {
+                            Glide.with(MainActivity.this).applyDefaultRequestOptions(placeholderRequest).load(logo).into(logoTeam);
+                        } catch (Exception e1){
+                            Toast.makeText(MainActivity.this, ""+e1, Toast.LENGTH_SHORT).show();
+                        }
 
                         progressDialog.dismiss();
                     }

@@ -1,6 +1,7 @@
 package com.example.myfutsal.Adapters;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,6 +26,10 @@ import com.example.myfutsal.Activities.TambahPemainActivity;
 import com.example.myfutsal.Menus.MyTeamActivity;
 import com.example.myfutsal.Model.Pemains;
 import com.example.myfutsal.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
@@ -116,10 +121,33 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
 
                             Intent intent = new Intent(context, EditPemainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("pemain_id", pemain_list.get(position).getPemain_id());
                             context.startActivity(intent);
 
                         } else if (which == 2) {
-                            Toast.makeText(context, "hapus", Toast.LENGTH_SHORT).show();
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setMessage("Hapus Pemain?")
+                                    .setCancelable(false)
+                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+
+                                            holder.deletePost(pemain_list.get(position).getPemain_id(), position);
+
+                                        }
+
+                                    })
+                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                        }
+                                    });
+
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+
                         }
                     }
                 });
@@ -177,5 +205,31 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
                 }
             });
         }
+
+        public void deletePost(String id, final int index) {
+
+            final ProgressDialog dialog = new ProgressDialog(context);
+            dialog.show();
+            firebaseFirestore.collection("Pemain").document(id)
+                    .delete()
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(context, "Berhasil Hapus Pemain!", Toast.LENGTH_SHORT).show();
+                            pemain_list.remove(index);
+                            notifyItemRemoved(index);
+                            dialog.dismiss();
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Error deleting post.", Toast.LENGTH_SHORT).show();
+                            dialog.dismiss();
+                        }
+                    });
+        }
+
     }
 }

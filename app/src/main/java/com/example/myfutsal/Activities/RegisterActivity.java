@@ -98,6 +98,7 @@ public class RegisterActivity<progressBar> extends AppCompatActivity {
 
                                         startActivity(new Intent(RegisterActivity.this, SetupActivity.class));
                                         Toast.makeText(RegisterActivity.this, "Registration Complete", Toast.LENGTH_SHORT).show();
+                                        finish();
                                     } else {
 
                                         Toast.makeText(RegisterActivity.this, "Authentication Failed" +task.getException().toString(), Toast.LENGTH_SHORT).show();
