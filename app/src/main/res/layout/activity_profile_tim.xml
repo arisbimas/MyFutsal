@@ -7,7 +7,7 @@
     tools:context=".Menus.MyTeamActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/myteamtoolbar"
+        android:id="@+id/profiletoolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myteamtoolbar">
+        app:layout_constraintTop_toBottomOf="@+id/profiletoolbar">
 
         <RelativeLayout
             android:id="@+id/layout"
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/foto_tim"
-                android:background="@android:color/holo_red_light"
+                android:background="@android:color/white"
                 android:elevation="4dp"
                 android:paddingBottom="24dp">
 
@@ -73,19 +73,21 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
                     android:clickable="true"
-                    android:src="@android:drawable/ic_menu_sort_by_size"
-                    app:srcCompat="@android:drawable/ic_menu_sort_by_size" />
+                    android:src="@drawable/baseline_more_vert_black_24"
+                    app:srcCompat="@drawable/baseline_more_vert_black_24" />
 
                 <TextView
                     android:id="@+id/nama_tim"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_below="@+id/popup_myteam"
                     android:text="Nama Tim"
-                    android:textColor="#fff"
+                    android:textColor="@android:color/black"
                     android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="@font/dekko"/>
 
                 <TextView
                     android:id="@+id/txt_umur"
@@ -93,11 +95,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/nama_tim"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:text="umur"
-                    android:textColor="#fff"
+                    android:textColor="#FF473E3E"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="@font/dekko"/>
 
                 <TextView
                     android:id="@+id/txt_siapmain"
@@ -105,11 +108,12 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/txt_umur"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:text="siap"
-                    android:textColor="#fff"
+                    android:textColor="#FF473E3E"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:fontFamily="@font/dekko"/>
 
             </RelativeLayout>
 
@@ -145,18 +149,6 @@
                     android:textSize="30dp"
                     android:textStyle="bold"
                     android:visibility="visible" />
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_tbhpemain"
-                    android:text="Tambah Pemain"
-                    android:layout_below="@+id/tdk_ada_member"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/button_rounded"
-                    android:padding="10dp"
-                    android:textColor="@android:color/white"/>
-
             </RelativeLayout>
 
         </RelativeLayout>

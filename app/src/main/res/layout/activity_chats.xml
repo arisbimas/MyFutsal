@@ -4,23 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Menus.PostsActivity">
+    tools:context=".Menus.ChatsActivity">
 
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/poststoolbar"
+        android:id="@+id/chatstoolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></android.support.v7.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent">
+    </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_posts"
+        android:id="@+id/rv_chats"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/poststoolbar"></android.support.v7.widget.RecyclerView>
+        android:layout_below="@+id/chatstoolbar"
+        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>

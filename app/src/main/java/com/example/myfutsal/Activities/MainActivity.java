@@ -3,9 +3,8 @@ package com.example.myfutsal.Activities;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,13 +19,11 @@ import android.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.myfutsal.HomeFragment;
 import com.example.myfutsal.Menus.CariLawanActivity;
-import com.example.myfutsal.Menus.InfoAppActivity;
+import com.example.myfutsal.Menus.ChatsActivity;
 import com.example.myfutsal.Menus.MyTeamActivity;
-import com.example.myfutsal.ProfileFragment;
+import com.example.myfutsal.Menus.PostsActivity;
 import com.example.myfutsal.R;
-import com.example.myfutsal.UsersFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,9 +32,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -49,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore firebaseFirestore;
 
-    private CardView cvCari, cvSiap, cvPosts, cvTimKu, cvInfoApp, cvExit;
+    private CardView cvCari, cvSiap, cvPosts, cvTimKu, cvChats, cvExit;
     private String current_user_id;
 
     private TextView namaTeam, siapMain, txtUmur;
@@ -67,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         cvSiap = findViewById(R.id.cv_siapbertanding);
         cvPosts = findViewById(R.id.cv_posts);
         cvTimKu = findViewById(R.id.cv_timsaya);
-        cvInfoApp = findViewById(R.id.cv_infoapp);
+        cvChats = findViewById(R.id.cv_chats);
         cvExit = findViewById(R.id.cv_keluar);
 
         namaTeam = findViewById(R.id.nama_tim);
@@ -78,9 +72,6 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
 
-
-
-
         if (mAuth.getCurrentUser() != null) {
 
             current_user_id = mAuth.getCurrentUser().getUid();
@@ -90,11 +81,44 @@ public class MainActivity extends AppCompatActivity {
             cvCari.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intentCariLawan = new Intent(MainActivity.this, CariLawanActivity.class);
-                    startActivity(intentCariLawan);
+
+                    firebaseFirestore.collection("Tim").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+
+                                String siap = task.getResult().get("siap_main").toString();
+
+                                if (siap.equals("Siap Main")){
+                                    Intent intentCariLawan = new Intent(MainActivity.this, CariLawanActivity.class);
+                                    startActivity(intentCariLawan);
+                                } else {
+                                    Toast.makeText(MainActivity.this, "Tim Anda Belum Siap Bertanding", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+                        }
+                    });
+
                 }
             });
 
+            firebaseFirestore.collection("Tim").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
+
+                        String siap = task.getResult().get("siap_main").toString();
+
+                        if (siap.equals("Siap Main")){
+                            cvSiap.setCardBackgroundColor(Color.YELLOW);
+                        } else if (siap.equals("Belum Siap")){
+                            cvSiap.setCardBackgroundColor(Color.WHITE);
+                        }
+
+                    }
+                }
+            });
             cvSiap.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -109,18 +133,20 @@ public class MainActivity extends AppCompatActivity {
 
                                 if (siap.equals("Siap Main")){
 
-                                    firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Belum Siap Main").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Belum Siap").addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(MainActivity.this, "Belum Siap Main", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Belum Siap", Toast.LENGTH_SHORT).show();
+                                            cvSiap.setCardBackgroundColor(Color.WHITE);
                                         }
                                     });
-                                } else if (siap.equals("Belum Siap Main")){
+                                } else if (siap.equals("Belum Siap")){
 
                                     firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Siap Main").addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             Toast.makeText(MainActivity.this, "Siap Main", Toast.LENGTH_SHORT).show();
+                                            cvSiap.setCardBackgroundColor(Color.YELLOW);
                                         }
                                     });
                                 }
@@ -135,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
             cvPosts.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent newPostIntent = new Intent(MainActivity.this, NewPostActivity.class);
+                    Intent newPostIntent = new Intent(MainActivity.this, PostsActivity.class);
                     startActivity(newPostIntent);
                 }
             });
@@ -148,11 +174,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-            cvInfoApp.setOnClickListener(new View.OnClickListener() {
+            cvChats.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intentInfoApp = new Intent(MainActivity.this, InfoAppActivity.class);
-                    startActivity(intentInfoApp);
+                    Intent intentChat = new Intent(MainActivity.this, ChatsActivity.class);
+                    startActivity(intentChat);
                 }
             });
 
@@ -226,64 +252,41 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-//            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//
-//                    if (task.isSuccessful()) {
-//
-//
-//
-//
-//                        if (!task.getResult().exists()) {
-//
-//
-//                            Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
-//                            startActivity(setupIntent);
-//                            finish();
-//
-//                        }
-//                    } else {
-//
-//                        String errorMessage = task.getException().getMessage();
-//                        Toast.makeText(MainActivity.this, "Error : " + errorMessage, Toast.LENGTH_LONG).show();
-//                    }
-//                }
         }
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case R.id.action_logout_btn:
-//                logout();
-                return true;
-            case R.id.action_setting_btn:
-                Intent intent = new Intent(MainActivity.this, SetupActivity.class);
-                startActivity(intent);
-
-                return true;
-
-            default:
-                return false;
-
-
-        }
-
-
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//
+//        getMenuInflater().inflate(R.menu.main_menu, menu);
+//        return true;
+//
+//
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//
+//        switch (item.getItemId()) {
+//
+//            case R.id.action_logout_btn:
+////                logout();
+//                return true;
+//            case R.id.action_setting_btn:
+//                Intent intent = new Intent(MainActivity.this, SetupActivity.class);
+//                startActivity(intent);
+//
+//                return true;
+//
+//            default:
+//                return false;
+//
+//
+//        }
+//
+//
+//    }
 
     //sign out method
     public void signOut() {
@@ -297,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
 
                         mAuth.signOut();
                         sendToLogin();
-
+                        finish();
 
                     }
 

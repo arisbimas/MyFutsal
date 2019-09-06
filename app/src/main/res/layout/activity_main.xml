@@ -52,7 +52,8 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_alignParentRight="true"
-                android:src="@drawable/default_image" />
+                android:src="@drawable/default_image"
+                android:scaleType="centerCrop"/>
 
         </RelativeLayout>
 
@@ -242,7 +243,7 @@
 
             <!-- Column 1 -->
             <android.support.v7.widget.CardView
-                android:id="@+id/cv_infoapp"
+                android:id="@+id/cv_chats"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_rowWeight="1"
@@ -264,14 +265,14 @@
                         android:layout_width="90dp"
                         android:layout_height="90dp"
                         android:layout_gravity="center_horizontal"
-                        android:src="@drawable/info" />
+                        android:src="@drawable/chat" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:text="Info App"
+                        android:text="Chats"
                         android:textAlignment="center"
                         android:textColor="@android:color/black"
                         android:textSize="18sp"

@@ -4,17 +4,19 @@ public class Lawan extends LawanId {
 
     public String nama_tim;
     public String foto_tim;
+    public String logo;
     public String tim_id;
     public String siap_main;
 
     public Lawan() {
     }
 
-    public Lawan(String nama_tim, String foto_tim,String tim_id, String siap_main) {
+    public Lawan(String nama_tim, String foto_tim,String tim_id, String siap_main, String logo) {
         this.nama_tim = nama_tim;
         this.foto_tim = foto_tim;
         this.tim_id = tim_id;
         this.siap_main = siap_main;
+        this.logo = logo;
     }
 
     public String getNama_tim() {
@@ -47,5 +49,13 @@ public class Lawan extends LawanId {
 
     public void setSiap_main(String siap_main) {
         this.siap_main = siap_main;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

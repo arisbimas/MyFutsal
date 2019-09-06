@@ -117,7 +117,7 @@ public class SetupActivity extends AppCompatActivity {
                         mainFotoURI = Uri.parse(foto_tim);
                         mainLogoURI = Uri.parse(logo);
 
-                        setupNamaTim.setText(nama_tim);
+                        setupNamaTim.setText(nama_tim.toUpperCase());
 
                         RequestOptions placeholderRequest = new RequestOptions();
                         placeholderRequest.placeholder(R.drawable.default_image);
@@ -188,11 +188,11 @@ public class SetupActivity extends AppCompatActivity {
                                             radioButton = (RadioButton) findViewById(selectedId);
 
                                             Map<String, String> userMap = new HashMap<>();
-                                            userMap.put("nama_tim", nama_tim);
+                                            userMap.put("nama_tim", nama_tim.toUpperCase());
                                             userMap.put("foto_tim", download_urifoto.toString());
                                             userMap.put("logo", download_urilogo.toString());
                                             userMap.put("umur", radioButton.getText().toString());
-                                            userMap.put("siap_main", "Belum Siap Main");
+                                            userMap.put("siap_main", "Belum Siap");
                                             userMap.put("tim_id", user_id);
 
 
@@ -337,7 +337,7 @@ public class SetupActivity extends AppCompatActivity {
     private void startCropImageActivity(Uri imageUri, int requestCode) {
         Intent vCropIntent = CropImage.activity(imageUri)
                 .setGuidelines(CropImageView.Guidelines.ON)
-                .setAspectRatio(16,9)
+                .setAspectRatio(512,512)
                 .setMultiTouchEnabled(true)
                 .getIntent(this);
 

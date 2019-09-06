@@ -1,54 +1,27 @@
 package com.example.myfutsal.Adapters;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.myfutsal.Activities.MessageActivity;
+import com.example.myfutsal.Activities.ProfileTimActivity;
 import com.example.myfutsal.Model.Lawan;
 import com.example.myfutsal.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-import static android.support.constraint.Constraints.TAG;
 
 
 public class CariLawanAdapter extends RecyclerView.Adapter<CariLawanAdapter.ViewHolder> {
@@ -78,19 +51,68 @@ public class CariLawanAdapter extends RecyclerView.Adapter<CariLawanAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.setIsRecyclable(false);
 
         final String blogPostId = lawan_list.get(position).LawanId;
         final String currentUserId = firebaseAuth.getCurrentUser().getUid();
 
-        String namatim = lawan_list.get(position).getNama_tim();
+        final String tim_id = lawan_list.get(position).getTim_id();
+
+        final String namatim = lawan_list.get(position).getNama_tim();
         holder.setNamaTim(namatim);
 
         String fototim = lawan_list.get(position).getFoto_tim();
         holder.setFotoTim(fototim);
 
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentProfileTime = new Intent(context, ProfileTimActivity.class);
+                intentProfileTime.putExtra("tim_id", tim_id);
+                intentProfileTime.putExtra("nama_tim", namatim);
+                context.startActivity(intentProfileTime);
+            }
+        });
+
+        holder.fotoTim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentProfileTime = new Intent(context, ProfileTimActivity.class);
+                intentProfileTime.putExtra("tim_id", tim_id);
+                intentProfileTime.putExtra("nama_tim", namatim);
+                context.startActivity(intentProfileTime);
+            }
+        });
+
+        holder.dotChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                PopupMenu popupMenu = new PopupMenu(context, holder.cardView);
+
+                popupMenu.getMenuInflater().inflate(R.menu.menu_chat, popupMenu.getMenu());
+                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.to_chat:
+
+                                Intent intent = new Intent(context, MessageActivity.class);
+                                intent.putExtra("tim_id", lawan_list.get(position).getTim_id());
+                                context.startActivity(intent);
+
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
+                popupMenu.show();
+            }
+
+        });
 
 
     }
@@ -105,13 +127,17 @@ public class CariLawanAdapter extends RecyclerView.Adapter<CariLawanAdapter.View
 
         private View mView;
 
+        private CardView cardView;
         private TextView namaTim;
-        private ImageView fotoTim;
+        private ImageView fotoTim, dotChat;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
 
+            cardView = mView.findViewById(R.id.cardview);
+            dotChat = mView.findViewById(R.id.dot_tochat);
+            fotoTim = mView.findViewById(R.id.ivFotoTim);
         }
 
         public void setNamaTim(String descText){
@@ -123,7 +149,7 @@ public class CariLawanAdapter extends RecyclerView.Adapter<CariLawanAdapter.View
 
         public void setFotoTim(String fototim) {
 
-            fotoTim = mView.findViewById(R.id.ivFotoTim);
+
             RequestOptions placeholderOption = new RequestOptions();
             placeholderOption.placeholder(R.drawable.post_placeholder);
             Glide.with(context).applyDefaultRequestOptions(placeholderOption).load(fototim).into(fotoTim);

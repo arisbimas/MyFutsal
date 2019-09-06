@@ -66,7 +66,8 @@ public class CariLawanActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         cariLawanAdapter = new CariLawanAdapter(lawans_list);
-        cariLawanRv.setLayoutManager(new LinearLayoutManager(this));
+        GridLayoutManager mGridLayoutManager = new GridLayoutManager(CariLawanActivity.this, 2);
+        cariLawanRv.setLayoutManager(mGridLayoutManager);
         cariLawanRv.setAdapter(cariLawanAdapter);
         cariLawanRv.setHasFixedSize(true);
 
@@ -123,13 +124,13 @@ public class CariLawanActivity extends AppCompatActivity {
                                         String blogPostId = doc.getDocument().getId();
                                         Lawan blogPost = doc.getDocument().toObject(Lawan.class).withId(blogPostId);
 
-                                        if (!blogPost.getTim_id().equals(current_team_id) && blogPost.getSiap_main().equals("Siap Main")) {
+                                        if (!blogPost.getTim_id().equals(current_team_id) && blogPost.getSiap_main().contains("Siap Main")) {
                                             lawans_list.add(blogPost);
                                             cariLawanAdapter.notifyItemInserted(lawans_list.size());
                                             cariLawanAdapter.notifyDataSetChanged();
                                             dialog.dismiss();
-                                        } else {
-                                            Toast.makeText(CariLawanActivity.this, "Tidak Ada", Toast.LENGTH_SHORT).show();
+                                        } else if (!blogPost.getTim_id().equals(current_team_id) && !blogPost.getSiap_main().contains("Belum Siap")) {
+                                            Toast.makeText(CariLawanActivity.this, "Tidak Ada Lawan", Toast.LENGTH_SHORT).show();
                                             dialog.dismiss();
                                         }
 

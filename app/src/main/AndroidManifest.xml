@@ -12,25 +12,54 @@
         android:roundIcon="@drawable/info"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.EditPemainActivity"></activity>
+        <activity android:name=".Activities.CommentActivity"
+            android:parentActivityName=".Menus.PostsActivity"></activity>
+        <activity
+            android:name=".Activities.MessageActivity"
+            android:parentActivityName=".Activities.MainActivity" />
+        <activity
+            android:name=".Activities.ProfileTimActivity"
+            android:parentActivityName=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.EditPemainActivity" />
         <activity
             android:name=".Activities.TambahPemainActivity"
             android:parentActivityName=".Menus.MyTeamActivity" />
         <activity
-            android:name=".Activities.EditTimActivity"
-            android:parentActivityName=".Menus.MyTeamActivity" />
-        <activity android:name=".Menus.InfoAppActivity" />
+            android:name=".Menus.ChatsActivity"
+            android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Menus.MyTeamActivity"
             android:parentActivityName=".Activities.MainActivity" />
-        <activity android:name=".Menus.PostsActivity" />
-        <activity android:name=".Menus.CariLawanActivity" />
+        <activity
+            android:name=".Menus.PostsActivity"
+            android:parentActivityName=".Activities.MainActivity"></activity>
+        <activity
+            android:name=".Menus.CariLawanActivity"
+            android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Activities.NewPostActivity"
-            android:parentActivityName=".Activities.MainActivity" />
+            android:parentActivityName=".Menus.PostsActivity" />
         <activity android:name=".Activities.SetupActivity" />
         <activity android:name=".Activities.RegisterActivity" />
         <activity android:name=".Activities.LoginForm" />
+
+        <service
+            android:name=".Notifications.MyFirebaseIdService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".Notifications.MyFirebaseMessaging"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,6 +70,10 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
     </application>
 
 </manifest>

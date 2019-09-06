@@ -78,7 +78,8 @@
                         android:drawablePadding="5sp"
                         android:drawableTint="#FF4081"
                         android:hint="Nama Tim"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:textAllCaps="true"/>
                 </android.support.design.widget.TextInputLayout>
 
                 <RadioGroup
@@ -119,8 +120,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="120dp"
                     android:background="@drawable/button_rounded"
-                    android:text="Simpan"
-                    android:textColor="@android:color/white"/>
+                    android:text="Simpan" />
 
             </RelativeLayout>
 

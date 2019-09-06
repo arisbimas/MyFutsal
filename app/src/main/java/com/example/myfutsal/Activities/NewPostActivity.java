@@ -1,5 +1,6 @@
 package com.example.myfutsal.Activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -40,13 +41,12 @@ public class NewPostActivity extends AppCompatActivity {
     private Button newPostBtn;
     private Uri postImageUri = null;
 
-    private ProgressBar newPostProgress;
-
     private StorageReference storageReference;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseAuth firebaseAuth;
 
     private String current_user_id;
+    private ProgressDialog progressDialog;
 
 
     @Override
@@ -60,14 +60,17 @@ public class NewPostActivity extends AppCompatActivity {
 
         current_user_id = firebaseAuth.getCurrentUser().getUid();
 
-
-//        getSupportActionBar().setTitle("Add New Post");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        newPostToolbar = findViewById(R.id.newposttoolbar);
+        setSupportActionBar(newPostToolbar);
+        getSupportActionBar().setTitle("Tambah Posts");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         newPostImage = findViewById(R.id.new_post_image);
         newPostDesc = findViewById(R.id.new_post_desc);
         newPostBtn = findViewById(R.id.post_btn);
-        newPostProgress = findViewById(R.id.new_post_progress);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Menambahkan Post...");
 
         newPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +78,7 @@ public class NewPostActivity extends AppCompatActivity {
 
                 CropImage.activity()
                         .setGuidelines(CropImageView.Guidelines.ON)
-                        //.setMinCropResultSize(512,512)
+                        .setMinCropResultSize(512,512)
                         .setAspectRatio(1, 1)
                         .start(NewPostActivity.this);
 
@@ -91,7 +94,7 @@ public class NewPostActivity extends AppCompatActivity {
 
                 if (!TextUtils.isEmpty(desc) && postImageUri != null) {
 
-                    newPostProgress.setVisibility(View.VISIBLE);
+                    progressDialog.show();
 
                     String randomName = FieldValue.serverTimestamp().toString();
                     final StorageReference filepath = storageReference.child("post_images").child(randomName + "jpg");
@@ -109,36 +112,33 @@ public class NewPostActivity extends AppCompatActivity {
                                 Uri download_uri = task.getResult();
 
                                 Map<String, Object> postMap = new HashMap<>();
-                                postMap.put("image_url", download_uri.toString());
-                                postMap.put("desc", desc);
-                                postMap.put("user_id", current_user_id);
-                                postMap.put("timestamp", FieldValue.serverTimestamp());
+                                postMap.put("foto_post", download_uri.toString());
+                                postMap.put("keterangan", desc);
+                                postMap.put("tim_id", current_user_id);
+                                postMap.put("waktu", FieldValue.serverTimestamp());
 
-                                firebaseFirestore.collection("posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                                firebaseFirestore.collection("Posts").add(postMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                                     @Override
                                     public void onComplete(@NonNull Task<DocumentReference> task) {
 
                                         if (task.isSuccessful()) {
 
-                                            Toast.makeText(NewPostActivity.this, "post was added", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(NewPostActivity.this, "Post Berhasil Ditambahkan", Toast.LENGTH_LONG).show();
                                             Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
                                             startActivity(mainIntent);
                                             finish();
 
                                         } else {
-
-
+                                            Toast.makeText(NewPostActivity.this, ""+task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                         }
 
 
-                                        newPostProgress.setVisibility(View.INVISIBLE);
+                                        progressDialog.dismiss();
                                     }
                                 });
 
                             } else {
-                                newPostProgress.setVisibility(View.INVISIBLE);
-
-
+                                progressDialog.dismiss();
                             }
 
                         }
