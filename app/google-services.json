@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "1086167747751",
-    "firebase_url": "https://second-c7b0f.firebaseio.com",
-    "project_id": "second-c7b0f",
-    "storage_bucket": "second-c7b0f.appspot.com"
+    "project_number": "174375642223",
+    "firebase_url": "https://my-futsal-315b6.firebaseio.com",
+    "project_id": "my-futsal-315b6",
+    "storage_bucket": "my-futsal-315b6.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1086167747751:android:cdbbc0b98384ff71",
+        "mobilesdk_app_id": "1:174375642223:android:50bf18b2725cf87df2999a",
         "android_client_info": {
           "package_name": "com.example.myfutsal"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1086167747751-4kri8deu1aokfu3hpmnkibo0n5moh1fc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.myfutsal",
-            "certificate_hash": "bb44dac3c07c494589eb9b37d46347727096f70d"
-          }
-        },
-        {
-          "client_id": "1086167747751-19lacobpm9jm7h04vocujdatptdsuc6g.apps.googleusercontent.com",
+          "client_id": "174375642223-r1u6mb44nck1lpu14qkcmgrua3r079s3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBrN9_Bir_k7exEgmcTtok_41tifRPHdGY"
+          "current_key": "AIzaSyBheC932XPPe1Qiujphwac8YrFJGJqPxsI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1086167747751-19lacobpm9jm7h04vocujdatptdsuc6g.apps.googleusercontent.com",
+              "client_id": "174375642223-r1u6mb44nck1lpu14qkcmgrua3r079s3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
