@@ -13,7 +13,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.EditPostActivity"></activity>
-        <activity android:name=".Activities.VPActivity" />
         <activity
             android:name=".Activities.CommentActivity"
             android:parentActivityName=".Menus.PostsActivity" />
