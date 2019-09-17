@@ -133,7 +133,7 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
 
-                                            holder.deletePost(pemain_list.get(position).getPemain_id(), position);
+                                            holder.deletePemain(pemain_list.get(position).getPemain_id(), position);
 
                                         }
 
@@ -182,7 +182,6 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
         }
 
         public void showDataPopUpProfile(String popupName) {
-            Toast.makeText(context, ""+popupName, Toast.LENGTH_SHORT).show();
             popUpNamaPemin = mDialog.findViewById(R.id.popup_namapemain);
             popUpUmurPemain = mDialog.findViewById(R.id.popup_user_umur);
             popUpImg = mDialog.findViewById(R.id.popup_img_pemain);
@@ -206,7 +205,7 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
             });
         }
 
-        public void deletePost(String id, final int index) {
+        public void deletePemain(String id, final int index) {
 
             final ProgressDialog dialog = new ProgressDialog(context);
             dialog.show();

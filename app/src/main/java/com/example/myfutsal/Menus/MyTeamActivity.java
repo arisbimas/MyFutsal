@@ -7,6 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +34,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.myfutsal.Activities.SetupActivity;
 import com.example.myfutsal.Activities.TambahPemainActivity;
 import com.example.myfutsal.Adapters.PemainAdapter;
+import com.example.myfutsal.Fragments.FragmentMembers;
+import com.example.myfutsal.Fragments.FragmentPosts;
+import com.example.myfutsal.Fragments.ProfileTeamFragment;
 import com.example.myfutsal.Model.Pemains;
 import com.example.myfutsal.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -50,175 +59,65 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MyTeamActivity extends AppCompatActivity {
 
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
     private Toolbar myTeamToolbar;
 
-    private ImageView fotoTim, popUpTeam;
-    private CircleImageView logoTim, fotoPemain;
-    private TextView namaTim, txtSiap, txtUmur, tidakAdaMemberTxt;
-    private Button tbhPemain;
 
-    private StorageReference storageReference;
-    private FirebaseFirestore firebaseFirestore;
-    private FirebaseAuth firebaseAuth;
-
-    private ProgressDialog progressDialog;
-    private String current_team_id;
-
-    private RecyclerView pemainRecyclerView;
-    private List<Pemains> pemain_list;
-    private PemainAdapter pemainAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_team);
 
-        storageReference = FirebaseStorage.getInstance().getReference();
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-
-        current_team_id = firebaseAuth.getCurrentUser().getUid();
-
         myTeamToolbar = findViewById(R.id.myteamtoolbar);
         setSupportActionBar(myTeamToolbar);
         getSupportActionBar().setTitle("Tim Saya");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        fotoTim = findViewById(R.id.foto_tim);
-        logoTim = findViewById(R.id.logotim);
-        namaTim = findViewById(R.id.nama_tim);
-        txtSiap = findViewById(R.id.txt_siapmain);
-        txtUmur = findViewById(R.id.txt_umur);
-        tidakAdaMemberTxt = findViewById(R.id.tdk_ada_member);
-        popUpTeam = findViewById(R.id.popup_myteam);
-        tbhPemain = findViewById(R.id.btn_tbhpemain);
+        viewPager = (ViewPager) findViewById(R.id.viewpager);
+        addTabs(viewPager);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading..");
-        progressDialog.show();
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setupWithViewPager(viewPager);
 
-        firebaseFirestore.collection("Tim").document(current_team_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+    }
 
-                if(task.isSuccessful()) {
+    private void addTabs(ViewPager viewPager) {
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-                    if (task.getResult().exists()){
+        adapter.addFrag(new ProfileTeamFragment(), "Profile");
+        adapter.addFrag(new FragmentMembers(), "Member");
+        adapter.addFrag(new FragmentPosts(), "Post");
+        viewPager.setAdapter(adapter);
+    }
 
-                        String nama_tim = task.getResult().getString("nama_tim");
-                        String foto_tim = task.getResult().getString("foto_tim");
-                        String logo = task.getResult().getString("logo");
-                        String umur = task.getResult().getString("umur");
-                        String siap = task.getResult().getString("siap_main");
+    class ViewPagerAdapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
 
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
 
-                        namaTim.setText(nama_tim);
-                        txtSiap.setText(siap);
-                        txtUmur.setText(umur);
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
 
-                        RequestOptions placeholderRequest = new RequestOptions();
-                        placeholderRequest.placeholder(R.drawable.default_image);
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
 
-                        Glide.with(MyTeamActivity.this).applyDefaultRequestOptions(placeholderRequest).load(foto_tim).into(fotoTim);
-                        Glide.with(MyTeamActivity.this).applyDefaultRequestOptions(placeholderRequest).load(logo).into(logoTim);
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
 
-                    }
-
-                }else{
-
-                    String error = task.getException().getMessage();
-                    Toast.makeText(MyTeamActivity.this, "(FIRESTORE Retrieve Error) : " + error, Toast.LENGTH_LONG).show();
-
-
-                }
-
-                progressDialog.dismiss();
-
-            }
-        });
-
-        pemain_list = new ArrayList<>();
-        pemainRecyclerView = findViewById(R.id.rv_pemain);
-        pemainAdapter = new PemainAdapter(getApplicationContext(), pemain_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
-        pemainRecyclerView.setLayoutManager(layoutManager);
-        pemainRecyclerView.setAdapter(pemainAdapter);
-
-
-        Query query = firebaseFirestore.collection("Pemain")
-                .whereEqualTo("team_id", current_team_id)
-                .orderBy("nama_pemain", Query.Direction.ASCENDING);
-        query.addSnapshotListener(MyTeamActivity.this, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-
-                if (e != null) {
-                    Log.w("TAG", "listen:error", e);
-                    return;
-                }
-
-                if (!documentSnapshots.isEmpty()) {
-                    tidakAdaMemberTxt.setVisibility(View.GONE);
-                    tbhPemain.setVisibility(View.GONE);
-                    for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                            String pemainId = doc.getDocument().getId();
-                            Pemains pemain = doc.getDocument().toObject(Pemains.class);
-                            pemain_list.add(pemain);
-                            pemainAdapter.notifyDataSetChanged();
-
-                        }
-                    }
-
-                } else {
-                    pemainRecyclerView.setVisibility(View.GONE);
-                }
-
-            }
-
-        });
-
-
-        popUpTeam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Dialog d = new AlertDialog.Builder(MyTeamActivity.this)
-
-                        .setNegativeButton("Cancel", null)
-                        .setItems(new String[]{"Edit Profil Tim", "Tambah Pemain",}, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dlg, int position) {
-
-                                if (position == 0) {
-
-                                    Intent editTimIntent = new Intent(MyTeamActivity.this, SetupActivity.class);
-                                    startActivity(editTimIntent);
-
-                                } else if (position == 1) {
-
-                                    Intent tambahpemainIntent = new Intent(MyTeamActivity.this, TambahPemainActivity.class);
-                                    startActivity(tambahpemainIntent);
-
-                                }
-
-                            }
-                        })
-                        .create();
-                d.show();
-            }
-        });
-
-        tbhPemain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MyTeamActivity.this, TambahPemainActivity.class);
-                startActivity(intent);
-            }
-        });
-
-
-
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 }

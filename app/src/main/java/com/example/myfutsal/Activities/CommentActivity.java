@@ -97,6 +97,7 @@ public class CommentActivity extends AppCompatActivity {
         final String desc = getIntent().getStringExtra("keterangan");
         final String nama_tim = getIntent().getStringExtra("nama_tim");
 
+
         //RecyclerView Firebase List
         commentsList = new ArrayList<>();
         commentsRecyclerAdapter = new CommentsRecyclerAdapter(commentsList);

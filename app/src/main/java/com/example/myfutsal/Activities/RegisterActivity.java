@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import dmax.dialog.SpotsDialog;
+
 public class RegisterActivity<progressBar> extends AppCompatActivity {
 
     EditText txtEmail, txtPassword, txtConfirmPassword;
@@ -34,6 +36,8 @@ public class RegisterActivity<progressBar> extends AppCompatActivity {
         txtConfirmPassword = (EditText)findViewById(R.id.txtpsw);
         btn_register = (Button) findViewById(R.id.btn_signup);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+
+        SpotsDialog dialog = new SpotsDialog(this, "Loading...");
 
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +80,7 @@ public class RegisterActivity<progressBar> extends AppCompatActivity {
                 if (password.length()<6){
                     Toast.makeText(RegisterActivity.this, "password too short", Toast.LENGTH_SHORT).show();
                 }
-                progressBar.setVisibility(View.VISIBLE);
+                dialog.show();
 
 
 
@@ -87,8 +91,7 @@ public class RegisterActivity<progressBar> extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                    progressBar.setVisibility(View.GONE);
-
+                                    dialog.dismiss();
 
                                     if (task.isSuccessful()) {
 

@@ -12,14 +12,17 @@
         android:roundIcon="@drawable/info"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activities.CommentActivity"
-            android:parentActivityName=".Menus.PostsActivity"></activity>
+        <activity android:name=".Activities.EditPostActivity"></activity>
+        <activity android:name=".Activities.VPActivity" />
+        <activity
+            android:name=".Activities.CommentActivity"
+            android:parentActivityName=".Menus.PostsActivity" />
         <activity
             android:name=".Activities.MessageActivity"
             android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Activities.ProfileTimActivity"
-            android:parentActivityName=".Activities.MainActivity"></activity>
+            android:parentActivityName=".Activities.MainActivity" />
         <activity android:name=".Activities.EditPemainActivity" />
         <activity
             android:name=".Activities.TambahPemainActivity"
@@ -32,7 +35,7 @@
             android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Menus.PostsActivity"
-            android:parentActivityName=".Activities.MainActivity"></activity>
+            android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Menus.CariLawanActivity"
             android:parentActivityName=".Activities.MainActivity" />

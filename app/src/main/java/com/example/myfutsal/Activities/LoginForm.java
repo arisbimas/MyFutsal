@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import dmax.dialog.SpotsDialog;
+
 public class LoginForm extends AppCompatActivity {
 
     EditText txtEmail, txtpassword;
@@ -34,10 +36,9 @@ public class LoginForm extends AppCompatActivity {
         btn_login = (Button)findViewById(R.id.buttonLogin);
         loginProgress = (ProgressBar)findViewById(R.id.login_progress);
 
-
+        SpotsDialog dialog = new SpotsDialog(this);
 
         firebaseAuth = FirebaseAuth.getInstance();
-
 
 
         btn_login.setOnClickListener(new View.OnClickListener() {
@@ -49,7 +50,7 @@ public class LoginForm extends AppCompatActivity {
 
 
                 if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-                    loginProgress.setVisibility(View.VISIBLE);
+                    dialog.show();
 
                     firebaseAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(LoginForm.this, new OnCompleteListener<AuthResult>() {
@@ -65,7 +66,7 @@ public class LoginForm extends AppCompatActivity {
                                         Toast.makeText(LoginForm.this, ""+task.getException().toString(), Toast.LENGTH_SHORT).show();
 
                                     }
-                                    loginProgress.setVisibility(View.INVISIBLE);
+                                    dialog.dismiss();
 
                                 }
                             });
