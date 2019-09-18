@@ -137,6 +137,13 @@ public class FragmentMembers extends Fragment {
 
         });
 
+        tbhPemain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, TambahPemainActivity.class));
+            }
+        });
+
         return view;
     }
 

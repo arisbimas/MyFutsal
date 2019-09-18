@@ -37,20 +37,9 @@ public class RegisterActivity<progressBar> extends AppCompatActivity {
         btn_register = (Button) findViewById(R.id.btn_signup);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
-        SpotsDialog dialog = new SpotsDialog(this, "Loading...");
-
-        btn_register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                finish();
-            }
-        });
-
-
-
         firebaseAuth = FirebaseAuth.getInstance();
 
+        SpotsDialog dialog = new SpotsDialog(this, "Loading...");
 
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,11 +85,8 @@ public class RegisterActivity<progressBar> extends AppCompatActivity {
                                     if (task.isSuccessful()) {
 
                                         Intent setupIntent = new Intent(RegisterActivity.this,SetupActivity.class);
+                                        setupIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(setupIntent);
-                                        finish();
-
-                                        startActivity(new Intent(RegisterActivity.this, SetupActivity.class));
-                                        Toast.makeText(RegisterActivity.this, "Registration Complete", Toast.LENGTH_SHORT).show();
                                         finish();
                                     } else {
 

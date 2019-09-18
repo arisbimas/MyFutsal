@@ -127,7 +127,6 @@ public class TambahPemainActivity extends AppCompatActivity {
                             Integer anak = 16;
                             Integer remaja = 22;
                             Integer dewasa = 29;
-//                            Integer tuabanget = 28+;
 
                             if (umurint <= anak ){
                                 dataummur = "Anak Anak";

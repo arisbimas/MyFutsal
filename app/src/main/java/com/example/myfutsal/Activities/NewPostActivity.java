@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.myfutsal.Menus.PostsActivity;
 import com.example.myfutsal.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,6 +33,8 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.HashMap;
 import java.util.Map;
 
+import dmax.dialog.SpotsDialog;
+
 public class NewPostActivity extends AppCompatActivity {
 
     private Toolbar newPostToolbar;
@@ -46,7 +49,7 @@ public class NewPostActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
 
     private String current_user_id;
-    private ProgressDialog progressDialog;
+    private SpotsDialog progressDialog;
 
 
     @Override
@@ -69,8 +72,7 @@ public class NewPostActivity extends AppCompatActivity {
         newPostDesc = findViewById(R.id.new_post_desc);
         newPostBtn = findViewById(R.id.post_btn);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Menambahkan Post...");
+        progressDialog = new SpotsDialog(this, "Menambahkan Post...");
 
         newPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,7 +126,7 @@ public class NewPostActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
 
                                             Toast.makeText(NewPostActivity.this, "Post Berhasil Ditambahkan", Toast.LENGTH_LONG).show();
-                                            Intent mainIntent = new Intent(NewPostActivity.this, MainActivity.class);
+                                            Intent mainIntent = new Intent(NewPostActivity.this, PostsActivity.class);
                                             startActivity(mainIntent);
                                             finish();
 

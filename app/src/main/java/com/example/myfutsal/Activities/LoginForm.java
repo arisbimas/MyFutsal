@@ -31,10 +31,10 @@ public class LoginForm extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login__from);
 
-        txtEmail = (EditText)findViewById(R.id.txt_Email);
-        txtpassword = (EditText)findViewById(R.id.txtpsw);
-        btn_login = (Button)findViewById(R.id.buttonLogin);
-        loginProgress = (ProgressBar)findViewById(R.id.login_progress);
+        txtEmail = (EditText) findViewById(R.id.txt_Email);
+        txtpassword = (EditText) findViewById(R.id.txtpsw);
+        btn_login = (Button) findViewById(R.id.buttonLogin);
+        loginProgress = (ProgressBar) findViewById(R.id.login_progress);
 
         SpotsDialog dialog = new SpotsDialog(this);
 
@@ -58,12 +58,12 @@ public class LoginForm extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
 
-                                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                         finish();
 
                                     } else {
 
-                                        Toast.makeText(LoginForm.this, ""+task.getException().toString(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginForm.this, "" + task.getException().toString(), Toast.LENGTH_SHORT).show();
 
                                     }
                                     dialog.dismiss();
@@ -71,19 +71,15 @@ public class LoginForm extends AppCompatActivity {
                                 }
                             });
 
-                }
-                else if (TextUtils.isEmpty(email)){
+                } else if (TextUtils.isEmpty(email)) {
 
                     Toast.makeText(LoginForm.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
                     return;
-                }
-                else if (TextUtils.isEmpty(password)){
+                } else if (TextUtils.isEmpty(password)) {
 
                     Toast.makeText(LoginForm.this, "Please Enter password", Toast.LENGTH_SHORT).show();
                     return;
-                }
-
-                else if (password.length()<6){
+                } else if (password.length() < 6) {
                     Toast.makeText(LoginForm.this, "password too short", Toast.LENGTH_SHORT).show();
                 }
 
@@ -97,5 +93,23 @@ public class LoginForm extends AppCompatActivity {
     public void btn_signupForm(View view) {
 
         startActivity(new Intent(getApplicationContext(), RegisterActivity.class));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if (firebaseAuth.getCurrentUser() != null) {
+
+            sendMain();
+        }
+    }
+
+    private void sendMain() {
+
+        Intent intent = new Intent(LoginForm.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 }

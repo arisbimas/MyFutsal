@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import dmax.dialog.SpotsDialog;
 
 public class SetupActivity extends AppCompatActivity {
 
@@ -65,7 +66,7 @@ public class SetupActivity extends AppCompatActivity {
     private Button setupSimpan;
     private RadioGroup radioGroup;
     private RadioButton radioButton;
-    private ProgressDialog progressDialog;
+    private SpotsDialog progressDialog;
 
     private StorageReference storageReferance;
     private FirebaseAuth firebaseAuth;
@@ -97,8 +98,7 @@ public class SetupActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Edit Profil Tim");
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading..");
+        progressDialog = new SpotsDialog(this);
         progressDialog.show();
         setupSimpan.setEnabled(false);
 
@@ -204,9 +204,10 @@ public class SetupActivity extends AppCompatActivity {
 
                                                         Toast.makeText(SetupActivity.this, "Setting are updated. ", Toast.LENGTH_LONG).show();
                                                         Intent mainIntent = new Intent(SetupActivity.this, MyTeamActivity.class);
+                                                        mainIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                         startActivity(mainIntent);
-                                                        finish();
                                                         progressDialog.dismiss();
+                                                        finish();
 
                                                     } else {
 
