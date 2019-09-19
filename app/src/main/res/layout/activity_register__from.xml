@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:padding="20dp"
-        android:src="@drawable/images" />
+        android:src="@drawable/mylogo" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="@color/colorPrimary"
 
 
         >
@@ -41,7 +41,7 @@
         android:layout_marginTop="5dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="@color/colorPrimary"
 
 
         >
@@ -55,7 +55,7 @@
         android:layout_marginTop="5dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="@color/colorPrimary"
 
 
         >
@@ -64,6 +64,8 @@
             android:id="@+id/txtemail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:drawableRight="@android:drawable/ic_dialog_email"
+            android:drawableTint="@color/colorPrimary"
             android:ems="10"
             android:hint="Email"
             android:inputType="text"
@@ -76,11 +78,9 @@
         android:layout_marginTop="5dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="@color/colorPrimary"
         app:passwordToggleEnabled="true"
-
-
-        >
+        app:passwordToggleTint="@color/colorPrimary">
 
         <EditText
             android:id="@+id/txtpsw"
@@ -98,11 +98,9 @@
         android:layout_marginTop="5dp"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="@color/colorPrimary"
         app:passwordToggleEnabled="true"
-
-
-        >
+        app:passwordToggleTint="@color/colorPrimary" >
 
         <EditText
             android:id="@+id/cpsw"
@@ -127,7 +125,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="40dp"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimary"
         android:text="Register"
         android:textColor="#ffffff"
         android:textSize="22sp" />

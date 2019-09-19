@@ -151,7 +151,7 @@ public class PemainLawanAdapter extends RecyclerView.Adapter<PemainLawanAdapter.
         }
 
         public void showDataPopUpProfile(String popupName) {
-            Toast.makeText(context, ""+popupName, Toast.LENGTH_SHORT).show();
+
             popUpNamaPemin = mDialog.findViewById(R.id.popup_namapemain);
             popUpUmurPemain = mDialog.findViewById(R.id.popup_user_umur);
             popUpImg = mDialog.findViewById(R.id.popup_img_pemain);
@@ -162,11 +162,11 @@ public class PemainLawanAdapter extends RecyclerView.Adapter<PemainLawanAdapter.
                     if (documentSnapshot.exists()) {
 
                         String nama = documentSnapshot.get("nama_pemain").toString();
-                        String umur = documentSnapshot.get("umur_pemain").toString();
+                        String umur = documentSnapshot.get("umur_angka").toString();
                         String img = documentSnapshot.get("foto_pemain").toString();
 
                         popUpNamaPemin.setText(nama);
-                        popUpUmurPemain.setText(umur);
+                        popUpUmurPemain.setText(umur +" Tahun");
 
                         Glide.with(context).load(img).into(popUpImg);
 

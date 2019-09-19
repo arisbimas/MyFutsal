@@ -129,12 +129,13 @@ public class CariLawanActivity extends AppCompatActivity {
                                             cariLawanAdapter.notifyItemInserted(lawans_list.size());
                                             cariLawanAdapter.notifyDataSetChanged();
                                             dialog.dismiss();
-                                        } else if (!blogPost.getTim_id().equals(current_team_id) && !blogPost.getSiap_main().equals("Siap Main")) {
-                                            Toast.makeText(CariLawanActivity.this, "Tidak Ada Lawan", Toast.LENGTH_SHORT).show();
-                                            dialog.dismiss();
                                         }
 
                                     }
+                                }
+                                if (lawans_list.isEmpty()) {
+                                    Toast.makeText(CariLawanActivity.this, "Tidak Ada Lawan", Toast.LENGTH_SHORT).show();
+                                    dialog.dismiss();
                                 }
 
 

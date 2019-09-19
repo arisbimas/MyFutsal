@@ -192,11 +192,11 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
                     if (documentSnapshot.exists()) {
 
                         String nama = documentSnapshot.get("nama_pemain").toString();
-                        String umur = documentSnapshot.get("umur_pemain").toString();
+                        String umur = documentSnapshot.get("umur_angka").toString();
                         String img = documentSnapshot.get("foto_pemain").toString();
 
                         popUpNamaPemin.setText(nama);
-                        popUpUmurPemain.setText(umur);
+                        popUpUmurPemain.setText(umur +" Tahun");
 
                         Glide.with(context).load(img).into(popUpImg);
 
