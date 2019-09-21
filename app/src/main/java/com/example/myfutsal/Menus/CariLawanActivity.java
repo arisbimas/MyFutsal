@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.myfutsal.Adapters.CariLawanAdapter;
@@ -41,7 +43,7 @@ public class CariLawanActivity extends AppCompatActivity {
     private String current_team_id;
     private Boolean isFirstPageFirstLoad = true;
     private DocumentSnapshot lastVisible;
-
+    private TextView tidakAdaLawan;
 
     private ProgressDialog dialog;
 
@@ -57,6 +59,8 @@ public class CariLawanActivity extends AppCompatActivity {
 
         cariLawanToolbar = findViewById(R.id.carilawantoolbar);
         cariLawanRv = findViewById(R.id.rv_carilawan);
+        tidakAdaLawan = findViewById(R.id.tidak_ada_lawan);
+
 
         firebaseAuth = FirebaseAuth.getInstance();
         current_team_id = firebaseAuth.getUid();
@@ -88,7 +92,7 @@ public class CariLawanActivity extends AppCompatActivity {
 
     private void firstQ() {
 
-        firebaseFirestore.collection("Tim").document(current_team_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        firebaseFirestore.collection("Tim").document(current_team_id).get().addOnCompleteListener(this,new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
 
@@ -126,6 +130,7 @@ public class CariLawanActivity extends AppCompatActivity {
 
                                         if (!blogPost.getTim_id().equals(current_team_id) && blogPost.getSiap_main().contains("Siap Main")) {
                                             lawans_list.add(blogPost);
+                                            tidakAdaLawan.setVisibility(View.GONE);
                                             cariLawanAdapter.notifyItemInserted(lawans_list.size());
                                             cariLawanAdapter.notifyDataSetChanged();
                                             dialog.dismiss();
@@ -134,14 +139,14 @@ public class CariLawanActivity extends AppCompatActivity {
                                     }
                                 }
                                 if (lawans_list.isEmpty()) {
-                                    Toast.makeText(CariLawanActivity.this, "Tidak Ada Lawan", Toast.LENGTH_SHORT).show();
+                                    tidakAdaLawan.setVisibility(View.VISIBLE);
                                     dialog.dismiss();
                                 }
 
 
                             } else {
 
-                                Toast.makeText(CariLawanActivity.this, "Tidak Ada Lawan Tersedia Saat Ini", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "Tidak Ada Lawan Tersedia Saat Ini", Toast.LENGTH_SHORT).show();
                                 dialog.dismiss();
                             }
                         }

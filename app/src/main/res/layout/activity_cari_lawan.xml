@@ -22,6 +22,18 @@
         android:id="@+id/rv_carilawan"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/carilawantoolbar">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_below="@+id/carilawantoolbar"></android.support.v7.widget.RecyclerView>
+
+    <TextView
+        android:id="@+id/tidak_ada_lawan"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/carilawantoolbar"
+        android:gravity="center_horizontal|center_vertical"
+        android:padding="10dp"
+        android:text="TIDAK ADA LAWAN"
+        android:textColor="@color/colorAccent"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:visibility="visible" />
 </RelativeLayout>

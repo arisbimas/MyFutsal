@@ -19,7 +19,7 @@
             android:layout_alignParentTop="true"></android.support.v7.widget.RecyclerView>
 
         <TextView
-            android:id="@+id/tdk_ada_member"
+            android:id="@+id/tdk_ada_membertim"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/member"
@@ -36,11 +36,12 @@
             android:layout_height="wrap_content"
             android:id="@+id/btn_tbhpemain"
             android:text="Tambah Pemain"
-            android:layout_below="@+id/tdk_ada_member"
+            android:layout_below="@+id/tdk_ada_membertim"
             android:layout_centerHorizontal="true"
             android:background="@drawable/button_rounded"
             android:padding="10dp"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:visibility="visible"/>
     </RelativeLayout>
 
 </FrameLayout>

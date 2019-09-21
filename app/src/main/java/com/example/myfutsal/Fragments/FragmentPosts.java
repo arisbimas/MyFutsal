@@ -80,39 +80,7 @@ public class FragmentPosts extends Fragment {
         myPostRv.setLayoutManager(new GridLayoutManager(context, 3));
         myPostRv.setAdapter(adapter);
 
-        Query query = firebaseFirestore.collection("Posts")
-                .whereEqualTo("tim_id", current_team_id)
-                .orderBy("waktu", Query.Direction.ASCENDING);
-        query.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-
-                if (e != null) {
-                    Log.w("TAG", "listen:error", e);
-                    return;
-                }
-
-                if (!documentSnapshots.isEmpty()) {
-                    tidakAdaPost.setVisibility(View.GONE);
-                    tbhPost.setVisibility(View.GONE);
-                    for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
-
-                        if (doc.getType() == DocumentChange.Type.ADDED) {
-
-                            String blogpostid = doc.getDocument().getId();
-                            Blog blog = doc.getDocument().toObject(Blog.class).withId(blogpostid);
-                            blog_list.add(blog);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-
-                } else {
-                    myPostRv.setVisibility(View.GONE);
-                }
-
-            }
-
-        });
+        queryPost(current_team_id);
 
         tbhPost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +92,44 @@ public class FragmentPosts extends Fragment {
         // Inflate the layout for this fragment
         return view;
 
+    }
+
+    private void queryPost(String timId) {
+        Query query2 = firebaseFirestore.collection("Posts")
+                .whereEqualTo("tim_id", timId)
+                .orderBy("waktu", Query.Direction.ASCENDING);
+
+        query2.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+
+                if (e != null) {
+                    Log.w("TAG", "listen:error", e);
+                    return;
+                }
+
+                if (!documentSnapshots.isEmpty()) {
+
+                    for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
+
+                        if (doc.getType() == DocumentChange.Type.ADDED) {
+
+                            String blogpostid = doc.getDocument().getId();
+                            Blog blog = doc.getDocument().toObject(Blog.class).withId(blogpostid);
+                            blog_list.add(blog);
+                            tidakAdaPost.setVisibility(View.GONE);
+                            tbhPost.setVisibility(View.GONE);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+
+                } else {
+                    myPostRv.setVisibility(View.GONE);
+                }
+
+            }
+
+        });
     }
 
 }

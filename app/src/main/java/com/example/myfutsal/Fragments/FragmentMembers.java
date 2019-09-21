@@ -91,7 +91,7 @@ public class FragmentMembers extends Fragment {
         storageReference    = FirebaseStorage.getInstance().getReference();
         firebaseFirestore   = FirebaseFirestore.getInstance();
         firebaseAuth        = FirebaseAuth.getInstance();
-        tidakAdaMemberTxt = view.findViewById(R.id.tdk_ada_member);
+        tidakAdaMemberTxt = view.findViewById(R.id.tdk_ada_membertim);
         tbhPemain = view.findViewById(R.id.btn_tbhpemain);
 
         current_team_id = firebaseAuth.getCurrentUser().getUid();
@@ -103,10 +103,23 @@ public class FragmentMembers extends Fragment {
         pemainRecyclerView.setLayoutManager(new GridLayoutManager(context, 3));
         pemainRecyclerView.setAdapter(pemainAdapter);
 
-        Query query = firebaseFirestore.collection("Pemain")
-                .whereEqualTo("team_id", current_team_id)
-                .orderBy("nama_pemain", Query.Direction.ASCENDING);
-        query.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
+        queryMember(current_team_id);
+
+        tbhPemain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(context, TambahPemainActivity.class));
+            }
+        });
+
+        return view;
+    }
+
+    private void queryMember(String timId) {
+        Query query1 = firebaseFirestore.collection("Pemain")
+                .whereEqualTo("team_id", timId);
+
+        query1.addSnapshotListener(getActivity(), new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
 
@@ -116,8 +129,7 @@ public class FragmentMembers extends Fragment {
                 }
 
                 if (!documentSnapshots.isEmpty()) {
-                    tidakAdaMemberTxt.setVisibility(View.GONE);
-                    tbhPemain.setVisibility(View.GONE);
+
                     for (DocumentChange doc : documentSnapshots.getDocumentChanges()) {
 
                         if (doc.getType() == DocumentChange.Type.ADDED) {
@@ -125,6 +137,8 @@ public class FragmentMembers extends Fragment {
                             String pemainId = doc.getDocument().getId();
                             Pemains pemain = doc.getDocument().toObject(Pemains.class);
                             pemain_list.add(pemain);
+                            tidakAdaMemberTxt.setVisibility(View.GONE);
+                            tbhPemain.setVisibility(View.GONE);
                             pemainAdapter.notifyDataSetChanged();
                         }
                     }
@@ -136,15 +150,6 @@ public class FragmentMembers extends Fragment {
             }
 
         });
-
-        tbhPemain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(context, TambahPemainActivity.class));
-            }
-        });
-
-        return view;
     }
 
 }

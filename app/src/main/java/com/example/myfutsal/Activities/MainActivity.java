@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setMessage("Loading..");
             progressDialog.show();
 
-            firebaseFirestore.collection("Tim").document(current_user_id).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            firebaseFirestore.collection("Tim").document(current_user_id).addSnapshotListener(this,new EventListener<DocumentSnapshot>() {
                 @Override
                 public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
 
