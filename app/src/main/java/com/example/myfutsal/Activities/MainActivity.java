@@ -87,13 +87,17 @@ public class MainActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if (task.isSuccessful()){
 
-                                String siap = task.getResult().get("siap_main").toString();
+                                if (task.getResult().exists()){
+                                    String siap = task.getResult().get("siap_main").toString();
 
-                                if (siap.equals("Siap Main")){
-                                    Intent intentCariLawan = new Intent(MainActivity.this, CariLawanActivity.class);
-                                    startActivity(intentCariLawan);
+                                    if (siap.equals("Siap Main")){
+                                        Intent intentCariLawan = new Intent(MainActivity.this, CariLawanActivity.class);
+                                        startActivity(intentCariLawan);
+                                    } else {
+                                        Toast.makeText(MainActivity.this, "Tim Anda Belum Siap Bertanding", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
-                                    Toast.makeText(MainActivity.this, "Tim Anda Belum Siap Bertanding", Toast.LENGTH_SHORT).show();
+                                    sendToSetup();
                                 }
 
                             }
@@ -108,12 +112,16 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if (task.isSuccessful()){
 
-                        String siap = task.getResult().get("siap_main").toString();
+                        if (task.getResult().exists()){
+                            String siap = task.getResult().get("siap_main").toString();
 
-                        if (siap.equals("Siap Main")){
-                            cvSiap.setCardBackgroundColor(Color.YELLOW);
-                        } else if (siap.equals("Belum Siap")){
-                            cvSiap.setCardBackgroundColor(Color.WHITE);
+                            if (siap.equals("Siap Main")){
+                                cvSiap.setCardBackgroundColor(Color.YELLOW);
+                            } else if (siap.equals("Belum Siap")){
+                                cvSiap.setCardBackgroundColor(Color.WHITE);
+                            }
+                        } else {
+                            sendToSetup();
                         }
 
                     }
@@ -208,48 +216,44 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.setMessage("Loading..");
             progressDialog.show();
 
-            firebaseFirestore.collection("Tim").document(current_user_id).addSnapshotListener(this,new EventListener<DocumentSnapshot>() {
+            current_user_id = mAuth.getCurrentUser().getUid();
+
+            firebaseFirestore.collection("Tim").document(current_user_id).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
-                public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()){
 
-                    if (e != null) {
-                        Log.w("MainAc", "Listen failed.", e);
-                        return;
-                    }
+                        if (task.getResult().exists()){
 
-                    if (!documentSnapshot.exists()){
+                            String nama_tim = task.getResult().getString("nama_tim");
+                            String siap_main = task.getResult().getString("siap_main");
+                            String foto_tim = task.getResult().getString("foto_tim");
+                            String logo = task.getResult().getString("logo");
+                            String umur = task.getResult().getString("umur");
 
-                        Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
-                        startActivity(setupIntent);
-                        finish();
+                            namaTeam.setText(nama_tim);
+                            siapMain.setText(siap_main);
+                            txtUmur.setText(umur);
 
-                    } else if (documentSnapshot != null && documentSnapshot.exists()) {
-                        String nama_tim = documentSnapshot.getString("nama_tim");
-                        String siap_main = documentSnapshot.getString("siap_main");
-                        String foto_tim = documentSnapshot.getString("foto_tim");
-                        String logo = documentSnapshot.getString("logo");
-                        String umur = documentSnapshot.getString("umur");
-
-                        namaTeam.setText(nama_tim);
-                        siapMain.setText(siap_main);
-                        txtUmur.setText(umur);
-
-                        RequestOptions placeholderRequest = new RequestOptions();
-                        placeholderRequest.placeholder(R.drawable.default_image);
+                            RequestOptions placeholderRequest = new RequestOptions();
+                            placeholderRequest.placeholder(R.drawable.default_image);
 
 //                        Glide.with(MainActivity.this).applyDefaultRequestOptions(placeholderRequest).load(foto_tim).into(fotoTim);
-                        try {
-                            Glide.with(MainActivity.this).applyDefaultRequestOptions(placeholderRequest).load(logo).into(logoTeam);
-                        } catch (Exception e1){
-                            Toast.makeText(MainActivity.this, ""+e1, Toast.LENGTH_SHORT).show();
+                            try {
+                                Glide.with(MainActivity.this).applyDefaultRequestOptions(placeholderRequest).load(logo).into(logoTeam);
+                            } catch (Exception e1){
+                                Toast.makeText(MainActivity.this, ""+e1, Toast.LENGTH_SHORT).show();
+                            }
+
+                            progressDialog.dismiss();
+
+                        } else {
+                            Intent setupIntent = new Intent(MainActivity.this, SetupActivity.class);
+                            startActivity(setupIntent);
+                            finish();
                         }
 
-                        progressDialog.dismiss();
                     }
-                    else {
-                        Log.d("MainAc", "Current data: null");
-                    }
-
                 }
             });
         }
@@ -319,6 +323,12 @@ public class MainActivity extends AppCompatActivity {
 
     private void sendToLogin() {
         Intent intent = new Intent(MainActivity.this, LoginForm.class);
+        startActivity(intent);
+        finish();
+    }
+
+    private void sendToSetup() {
+        Intent intent = new Intent(MainActivity.this, SetupActivity.class);
         startActivity(intent);
         finish();
     }
