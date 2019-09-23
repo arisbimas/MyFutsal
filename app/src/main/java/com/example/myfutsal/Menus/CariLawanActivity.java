@@ -98,11 +98,12 @@ public class CariLawanActivity extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
 
-                    String usiatimsaya = task.getResult().get("umur").toString();
+                    //NGAMBIL DATA TIM KITA SENDIRI DARI DATABASE, AMBIL UMURNYA AJA
+                    String umurTimSaya = task.getResult().get("umur").toString();
 
+                    //LALU AMBIL DATA DI TABEL TIM SESUAI DENGAN UMUR TIM KITA TADI
                     CollectionReference collectionReference = firebaseFirestore.collection("Tim");
-
-                    Query firstQuery = collectionReference.whereEqualTo("umur", usiatimsaya);
+                    Query firstQuery = collectionReference.whereEqualTo("umur", umurTimSaya);
 
                     firstQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
@@ -129,7 +130,7 @@ public class CariLawanActivity extends AppCompatActivity {
                                         Lawan lawanList = doc.getDocument().toObject(Lawan.class).withId(lawanId);
 
                                         //ALGORITMANYA
-                                        if (!lawanList.getTim_id().equals(current_team_id) && lawanList.getSiap_main().contains("Siap Main")) {
+                                        if (!lawanList.getTim_id().equals(current_team_id) && lawanList.getSiap_main().contains("Siap")) {
                                             lawans_list.add(lawanList);
                                             tidakAdaLawan.setVisibility(View.GONE);
                                             cariLawanAdapter.notifyItemInserted(lawans_list.size());

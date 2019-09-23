@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
                                 if (task.getResult().exists()){
                                     String siap = task.getResult().get("siap_main").toString();
 
-                                    if (siap.equals("Siap Main")){
+                                    if (siap.equals("Tim Siap Bertanding")){
                                         Intent intentCariLawan = new Intent(MainActivity.this, CariLawanActivity.class);
                                         startActivity(intentCariLawan);
                                     } else {
