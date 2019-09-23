@@ -125,11 +125,12 @@ public class CariLawanActivity extends AppCompatActivity {
 
                                     if (doc.getType() == DocumentChange.Type.ADDED) {
 
-                                        String blogPostId = doc.getDocument().getId();
-                                        Lawan blogPost = doc.getDocument().toObject(Lawan.class).withId(blogPostId);
+                                        String lawanId = doc.getDocument().getId();
+                                        Lawan lawanList = doc.getDocument().toObject(Lawan.class).withId(lawanId);
 
-                                        if (!blogPost.getTim_id().equals(current_team_id) && blogPost.getSiap_main().contains("Siap Main")) {
-                                            lawans_list.add(blogPost);
+                                        //ALGORITMANYA
+                                        if (!lawanList.getTim_id().equals(current_team_id) && lawanList.getSiap_main().contains("Siap Main")) {
+                                            lawans_list.add(lawanList);
                                             tidakAdaLawan.setVisibility(View.GONE);
                                             cariLawanAdapter.notifyItemInserted(lawans_list.size());
                                             cariLawanAdapter.notifyDataSetChanged();

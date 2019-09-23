@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                                         Intent intentCariLawan = new Intent(MainActivity.this, CariLawanActivity.class);
                                         startActivity(intentCariLawan);
                                     } else {
-                                        Toast.makeText(MainActivity.this, "Tim Anda Belum Siap Bertanding", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(MainActivity.this, "Tim Anda Belum Bisa Bertanding", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     sendToSetup();
@@ -115,9 +115,9 @@ public class MainActivity extends AppCompatActivity {
                         if (task.getResult().exists()){
                             String siap = task.getResult().get("siap_main").toString();
 
-                            if (siap.equals("Siap Main")){
+                            if (siap.equals("Tim Siap Bertanding")){
                                 cvSiap.setCardBackgroundColor(Color.YELLOW);
-                            } else if (siap.equals("Belum Siap")){
+                            } else if (siap.equals("Tim Belum Bisa Bertanding")){
                                 cvSiap.setCardBackgroundColor(Color.WHITE);
                             }
                         } else {
@@ -139,21 +139,21 @@ public class MainActivity extends AppCompatActivity {
 
                                 String siap = task.getResult().getString("siap_main");
 
-                                if (siap.equals("Siap Main")){
+                                if (siap.equals("Tim Siap Bertanding")){
 
-                                    firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Belum Siap").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Tim Belum Bisa Bertanding").addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(MainActivity.this, "Belum Siap", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Tim Belum Bisa Bertanding", Toast.LENGTH_SHORT).show();
                                             cvSiap.setCardBackgroundColor(Color.WHITE);
                                         }
                                     });
-                                } else if (siap.equals("Belum Siap")){
+                                } else if (siap.equals("Tim Belum Bisa Bertanding")){
 
-                                    firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Siap Main").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    firebaseFirestore.collection("Tim").document(current_user_id).update("siap_main", "Tim Siap Bertanding").addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
-                                            Toast.makeText(MainActivity.this, "Siap Main", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, "Tim Siap Bertanding", Toast.LENGTH_SHORT).show();
                                             cvSiap.setCardBackgroundColor(Color.YELLOW);
                                         }
                                     });

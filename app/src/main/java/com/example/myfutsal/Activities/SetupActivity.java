@@ -192,7 +192,7 @@ public class SetupActivity extends AppCompatActivity {
                                             userMap.put("foto_tim", download_urifoto.toString());
                                             userMap.put("logo", download_urilogo.toString());
                                             userMap.put("umur", radioButton.getText().toString());
-                                            userMap.put("siap_main", "Belum Siap");
+                                            userMap.put("siap_main", "Tim Belum Bisa Bertanding");
                                             userMap.put("tim_id", user_id);
 
 
