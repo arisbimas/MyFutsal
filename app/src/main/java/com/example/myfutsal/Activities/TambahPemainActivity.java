@@ -48,7 +48,7 @@ public class TambahPemainActivity extends AppCompatActivity {
     private StorageReference storageReference;
 
     private CircleImageView fotoPemain;
-    private EditText namaPemain, umurPemain;
+    private EditText namaPemain, umurPemain, prestasiPemain;
     private Button btnTbh;
     Uri mainFotoPemain = null;
 
@@ -70,6 +70,7 @@ public class TambahPemainActivity extends AppCompatActivity {
         fotoPemain = findViewById(R.id.foto_pemain);
         namaPemain = findViewById(R.id.nama_pemain);
         umurPemain = findViewById(R.id.umur_pemain);
+        prestasiPemain = findViewById(R.id.prestasi_pemain);
         btnTbh = findViewById(R.id.btn_tbhpemain);
 
         setSupportActionBar(tbhToolbar);
@@ -111,6 +112,7 @@ public class TambahPemainActivity extends AppCompatActivity {
 
                 final String nama = namaPemain.getText().toString();
                 final String umurstr = umurPemain.getText().toString();
+                final String prestasi = prestasiPemain.getText().toString();
 
 
                 if (!TextUtils.isEmpty(nama) && !TextUtils.isEmpty(umurstr) && mainFotoPemain != null) {
@@ -163,7 +165,7 @@ public class TambahPemainActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Uri> task) {
                                         if (task.isSuccessful()) {
 
-                                            simpanDataPemain(task, current_tim_id, nama, cekumurtim, umurint);
+                                            simpanDataPemain(task, current_tim_id, nama, cekumurtim, umurint, prestasi);
 
                                         } else {
 
@@ -193,7 +195,7 @@ public class TambahPemainActivity extends AppCompatActivity {
 
     }
 
-    private void simpanDataPemain(@NonNull Task<Uri> task, String timid,  String username, String umur_pemain, Integer umurint) {
+    private void simpanDataPemain(@NonNull Task<Uri> task, String timid,  String username, String umur_pemain, Integer umurint, String prestasi) {
 
 
         Uri downloadUri;
@@ -218,6 +220,7 @@ public class TambahPemainActivity extends AppCompatActivity {
         pemainMap.put("foto_pemain", downloadUri.toString());
         pemainMap.put("team_id", timid);
         pemainMap.put("umur_angka", umurint.toString());
+        pemainMap.put("prestasi_pemain", prestasi);
 
         firebaseFirestore.collection("Pemain").document(randomIdPemain).set(pemainMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

@@ -76,11 +76,32 @@
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/wg_prestasi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/wg_umur"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="20dp">
+
+                <EditText
+                    android:id="@+id/prestasi_pemain"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5sp"
+                    android:drawableTint="#FF4081"
+                    android:hint="Pretasi Pemain"
+                    android:inputType="textMultiLine"
+                    android:singleLine="true" />
+            </android.support.design.widget.TextInputLayout>
+
             <Button
                 android:id="@+id/btn_tbhpemain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/wg_umur"
+                android:layout_below="@+id/wg_prestasi"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="120dp"

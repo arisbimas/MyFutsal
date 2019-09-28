@@ -168,7 +168,7 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
         private ImageView fotoPemain;
         private TextView namaPemain;
         private Dialog mDialog;
-        private TextView popUpNamaPemin, popUpUmurPemain;
+        private TextView popUpNamaPemin, popUpUmurPemain, popUpPrestasiPemin;
         private CircleImageView popUpImg;
 
 
@@ -184,6 +184,7 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
         public void showDataPopUpProfile(String popupName) {
             popUpNamaPemin = mDialog.findViewById(R.id.popup_namapemain);
             popUpUmurPemain = mDialog.findViewById(R.id.popup_user_umur);
+            popUpPrestasiPemin = mDialog.findViewById(R.id.popup_user_prestasi);
             popUpImg = mDialog.findViewById(R.id.popup_img_pemain);
 
             firebaseFirestore.collection("Pemain").document(popupName).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -194,9 +195,11 @@ public class PemainAdapter extends RecyclerView.Adapter<PemainAdapter.ProfileBlo
                         String nama = documentSnapshot.get("nama_pemain").toString();
                         String umur = documentSnapshot.get("umur_angka").toString();
                         String img = documentSnapshot.get("foto_pemain").toString();
+                        String prestasi = documentSnapshot.get("prestasi_pemain").toString();
 
                         popUpNamaPemin.setText(nama);
                         popUpUmurPemain.setText(umur +" Tahun");
+                        popUpPrestasiPemin.setText(prestasi);
 
                         Glide.with(context).load(img).into(popUpImg);
 
