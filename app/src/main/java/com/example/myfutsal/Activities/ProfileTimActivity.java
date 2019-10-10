@@ -141,8 +141,7 @@ public class ProfileTimActivity extends AppCompatActivity {
 
 
         Query query = firebaseFirestore.collection("Pemain")
-                .whereEqualTo("team_id", tim_id)
-                .orderBy("nama_pemain", Query.Direction.ASCENDING);
+                .whereEqualTo("team_id", tim_id);
         query.addSnapshotListener(ProfileTimActivity.this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
