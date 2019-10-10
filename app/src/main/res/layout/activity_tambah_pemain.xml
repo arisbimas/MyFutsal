@@ -92,7 +92,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="5sp"
                     android:drawableTint="#FF4081"
-                    android:hint="Pretasi Pemain"
+                    android:hint="Prestasi Pemain"
                     android:inputType="textMultiLine"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
